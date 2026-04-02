@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - Home & Living</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Unna:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-dark: #0F172A;
+    --color-mid: #364151;
+    --color-accent: #005EE9;
+    --color-white: #FFFFFF;
+    --color-light: #D1DAE5;
+    --color-footer-bg: #070614;
+    --font-body: 'DM Sans', sans-serif;
+    --font-heading: 'Unna', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-mid);
+    background: var(--color-white);
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: background 0.3s ease;
+  }
+  .site-header.scrolled {
+    background: rgba(255,255,255,0.97);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: 96px;
+  }
+  .logo {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    color: var(--color-white);
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+  .site-header.scrolled .logo { color: var(--color-dark); }
+
+  .main-nav { display: flex; align-items: center; gap: 0; }
+  .nav-item { position: relative; }
+  .nav-link {
+    display: block;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #f4f6f3;
+    letter-spacing: 0.5px;
+    line-height: 96px;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .site-header.scrolled .nav-link { color: var(--color-dark); }
+  .nav-link:hover { color: var(--color-white); opacity: 0.8; }
+  .site-header.scrolled .nav-link:hover { color: var(--color-accent); opacity: 1; }
+
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--color-white);
+    min-width: 180px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    border-top: 2px solid var(--color-accent);
+    z-index: 100;
+  }
+  .nav-item:hover .dropdown { display: block; }
+  .dropdown a {
+    display: block;
+    padding: 10px 18px;
+    font-size: 14px;
+    color: var(--color-dark);
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .dropdown a:hover { background: #f7f9ff; color: var(--color-accent); }
+
+  .header-right { display: flex; align-items: center; gap: 20px; }
+
+  .search-wrap {
+    position: relative;
+  }
+  .search-wrap input {
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: var(--color-white);
+    padding: 7px 36px 7px 14px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    width: 200px;
+    outline: none;
+    transition: all 0.3s;
+  }
+  .search-wrap input::placeholder { color: rgba(255,255,255,0.7); }
+  .site-header.scrolled .search-wrap input {
+    border-color: var(--color-light);
+    background: #f5f7fa;
+    color: var(--color-dark);
+  }
+  .site-header.scrolled .search-wrap input::placeholder { color: #aaa; }
+  .search-wrap svg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 15px; fill: rgba(255,255,255,0.7); }
+  .site-header.scrolled .search-wrap svg { fill: var(--color-mid); }
+
+  .cart-icon {
+    font-size: 22px;
+    color: var(--color-white);
+    position: relative;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+  .site-header.scrolled .cart-icon { color: var(--color-accent); }
+  .cart-count {
+    position: absolute; top: -8px; right: -10px;
+    background: var(--color-accent);
+    color: #fff; font-size: 10px; font-weight: 700;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .account-icon { color: var(--color-white); transition: color 0.3s; cursor: pointer; }
+  .site-header.scrolled .account-icon { color: var(--color-mid); }
+  .account-icon svg { width: 22px; height: 22px; fill: currentColor; }
+
+  /* Mobile nav toggle */
+  .mobile-toggle {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    flex-direction: column; gap: 5px; padding: 4px;
+  }
+  .mobile-toggle span {
+    display: block; width: 24px; height: 2px;
+    background: var(--color-white);
+    transition: background 0.3s;
+  }
+  .site-header.scrolled .mobile-toggle span { background: var(--color-dark); }
+
+  /* ===== HERO SECTION ===== */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+  }
+  .hero-slides { position: absolute; inset: 0; }
+  .hero-slide {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .hero-slide.active { opacity: 1; }
+  .hero-slide::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(7,6,20,0.65) 0%, rgba(7,6,20,0.25) 100%);
+  }
+
+  .hero-slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=80'); }
+  .hero-slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1600&q=80'); }
+  .hero-slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600&q=80'); }
+  .hero-slide:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1615873968403-89e068629265?w=1600&q=80'); }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 13px; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.8);
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(42px, 7vw, 80px);
+    color: var(--color-white);
+    line-height: 1.15;
+    max-width: 800px;
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--color-accent);
+    color: var(--color-white);
+    padding: 14px 36px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    transition: background 0.2s, transform 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary:hover { background: var(--color-dark); transform: translateY(-1px); }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    color: var(--color-dark);
+  }
+  .btn-outline {
+    display: inline-block;
+    border: 1.5px solid var(--color-accent);
+    color: var(--color-accent);
+    padding: 9px 22px;
+    font-size: 13px; font-weight: 500;
+    text-transform: capitalize;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--color-dark); border-color: var(--color-dark); color: #fff; }
+
+  /* ===== PRODUCT SECTIONS ===== */
+  .section {
+    padding: 80px 0;
+  }
+  .section.gray-bg { background: #f8f9fb; }
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 30px; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .products-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .product-card {
+    background: var(--color-white);
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .product-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+
+  .product-thumb {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    background: #f5f5f5;
+  }
+  .product-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .product-card:hover .product-thumb img { transform: scale(1.05); }
+
+  .sale-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--color-white);
+    color: var(--color-dark);
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    z-index: 2;
+  }
+
+  .add-btn {
+    position: absolute; bottom: 14px; right: 14px;
+    background: var(--color-white);
+    border: none; cursor: pointer;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    transform: translateY(4px);
+    z-index: 2;
+  }
+  .product-card:hover .add-btn { opacity: 1; transform: translateY(0); }
+  .add-btn svg { width: 16px; height: 16px; fill: var(--color-dark); }
+
+  .product-info { padding: 16px 0; }
+  .product-stars { color: #FDA256; font-size: 13px; margin-bottom: 4px; }
+  .product-title {
+    font-family: var(--font-body);
+    font-size: 14px; font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .product-cat {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #888;
+    margin-bottom: 8px;
+  }
+  .product-price { font-size: 15px; font-weight: 500; color: var(--color-mid); }
+  .product-price del { color: #aaa; font-size: 13px; margin-right: 6px; }
+  .product-price ins { text-decoration: none; color: var(--color-dark); }
+
+  .swatches { display: flex; gap: 6px; margin-top: 8px; }
+  .swatch {
+    width: 20px; height: 20px;
+    border-radius: 3px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .swatch:hover { border-color: var(--color-dark); }
+
+  /* ===== ABOUT / STORY SECTION ===== */
+  .about-section {
+    padding: 100px 0;
+    background: #fafaf8;
+  }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-label {
+    font-size: 12px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--color-accent);
+    margin-bottom: 16px;
+  }
+  .about-title {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    color: var(--color-dark);
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .about-text { font-size: 15px; line-height: 1.8; color: var(--color-mid); margin-bottom: 16px; }
+  .about-text h3 { font-family: var(--font-heading); font-size: 22px; font-weight: 400; color: var(--color-dark); margin: 24px 0 10px; }
+
+  .video-wrap {
+    border-radius: 2px;
+    overflow: hidden;
+    aspect-ratio: 16/10;
+    background: var(--color-dark);
+    position: relative;
+  }
+  .video-wrap video, .video-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials { padding: 100px 0; }
+  .testimonials .section-title { text-align: center; margin-bottom: 12px; }
+  .divider { width: 60px; height: 2px; background: var(--color-light); margin: 0 auto 50px; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  .testimonial-card {
+    padding: 32px;
+    background: var(--color-white);
+    border: 1px solid var(--color-light);
+    position: relative;
+  }
+  .quote-icon { font-size: 36px; color: var(--color-accent); line-height: 1; margin-bottom: 16px; }
+  .testimonial-text { font-size: 14px; line-height: 1.8; color: var(--color-mid); margin-bottom: 20px; }
+  .testimonial-author { font-weight: 600; font-size: 14px; color: var(--color-dark); }
+
+  /* ===== CTA BANNER ===== */
+  .cta-banner {
+    background: var(--color-dark);
+    padding: 80px 30px;
+    text-align: center;
+  }
+  .cta-banner h3 {
+    font-family: var(--font-heading);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 400; color: var(--color-white);
+    margin-bottom: 12px;
+  }
+  .cta-banner p { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 32px; line-height: 1.7; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .cta-banner .btn-primary { background: var(--color-white); color: var(--color-dark); }
+  .cta-banner .btn-primary:hover { background: var(--color-accent); color: var(--color-white); }
+
+  /* ===== TRUST ICONS ===== */
+  .trust-section { padding: 70px 0; border-top: 1px solid var(--color-light); }
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .trust-item { display: flex; align-items: flex-start; gap: 20px; }
+  .trust-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--color-accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .trust-icon svg { width: 22px; height: 22px; fill: var(--color-white); }
+  .trust-title { font-weight: 600; font-size: 15px; color: var(--color-dark); margin-bottom: 6px; }
+  .trust-desc { font-size: 13px; color: var(--color-mid); line-height: 1.6; }
+
+  /* ===== FOOTER ===== */
+  .site-footer { background: var(--color-footer-bg); padding: 70px 0 40px; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-brand {
+    font-family: var(--font-heading);
+    font-size: 20px; color: var(--color-white);
+    margin-bottom: 16px;
+  }
+  .footer-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 20px; }
+  .footer-email { font-size: 13px; color: var(--color-accent); display: flex; align-items: center; gap: 8px; }
+  .footer-email svg { width: 14px; fill: var(--color-accent); }
+
+  .footer-heading { font-size: 14px; font-weight: 600; color: var(--color-white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--color-white); }
+  .footer-links a::before { content: '○'; font-size: 10px; }
+
+  .social-links { display: flex; gap: 12px; margin-bottom: 24px; }
+  .social-link {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); transition: all 0.2s;
+  }
+  .social-link:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .social-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+  .newsletter-text { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+  .newsletter-form { display: flex; }
+  .newsletter-form input {
+    flex: 1; padding: 10px 14px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-right: none; color: #fff;
+    font-size: 13px; font-family: var(--font-body); outline: none;
+  }
+  .newsletter-form input::placeholder { color: rgba(255,255,255,0.35); }
+  .newsletter-form button {
+    padding: 10px 20px;
+    background: var(--color-accent); border: none;
+    color: #fff; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: var(--font-body);
+    transition: background 0.2s;
+  }
+  .newsletter-form button:hover { background: var(--color-dark); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 24px;
+    text-align: center;
+    font-size: 13px; color: rgba(255,255,255,0.35);
+  }
+
+  /* ===== WHATSAPP BUTTON ===== */
+  .whatsapp-btn {
+    position: fixed; bottom: 20px; left: 20px; z-index: 999;
+    display: flex; align-items: center; gap: 10px;
+    background: #e4e4e4; color: #555;
+    padding: 0 14px 0 0; border-radius: 25px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    cursor: pointer; text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    overflow: hidden;
+    animation: slideIn 0.5s 1s both;
+  }
+  .whatsapp-icon-wrap {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .whatsapp-icon-wrap svg { width: 36px; height: 36px; }
+  @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* ===== MOBILE MENU ===== */
+  .mobile-nav {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--color-white); z-index: 999;
+    padding: 80px 30px 30px; overflow-y: auto;
+  }
+  .mobile-nav.open { display: block; }
+  .mobile-nav-close {
+    position: absolute; top: 20px; right: 20px;
+    background: none; border: none; font-size: 28px;
+    cursor: pointer; color: var(--color-dark);
+  }
+  .mobile-nav a {
+    display: block; padding: 14px 0;
+    font-size: 18px; font-family: var(--font-heading);
+    color: var(--color-dark); border-bottom: 1px solid var(--color-light);
+  }
+  .mobile-nav a:hover { color: var(--color-accent); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1100px) {
+    .products-grid-4 { grid-template-columns: repeat(3, 1fr); }
+    .search-wrap input { width: 160px; }
+  }
+  @media (max-width: 900px) {
+    .main-nav, .search-wrap { display: none; }
+    .mobile-toggle { display: flex; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .products-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .about-inner { grid-template-columns: 1fr; gap: 40px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: 1fr; gap: 28px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .header-inner { padding: 0 20px; }
+  }
+  @media (max-width: 560px) {
+    .products-grid, .products-grid-4 { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .section { padding: 50px 0; }
+    .hero-title { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#" class="logo">Home &amp; Living</a>
+
+    <nav class="main-nav">
+      <div class="nav-item">
+        <a href="#" class="nav-link">SOFA</a>
+        <div class="dropdown">
+          <a href="#">Armchair</a>
+          <a href="#">2-Seater</a>
+          <a href="#">3-Seater</a>
+          <a href="#">4-Seater &amp; Up</a>
+          <a href="#">L-Shape</a>
+          <a href="#">Outdoor/Patio</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="#" class="nav-link">BEDROOM</a>
+      </div>
+      <div class="nav-item">
+        <a href="#" class="nav-link">DINING</a>
+        <div class="dropdown">
+          <a href="#">Dining Chair</a>
+          <a href="#">Dining Set</a>
+          <a href="#">Dining Table</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="#" class="nav-link">DECOR</a>
+        <div class="dropdown">
+          <a href="#">Coffee Table</a>
+          <a href="#">Swing Chair</a>
+          <a href="#">TV Console</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header-right">
+      <div class="search-wrap">
+        <input type="search" placeholder="Search for products...">
+        <svg viewBox="0 0 18 18"><path d="M16.72 17.9a1 1 0 01-1.22-.09l-2.42-2.43-.59.39a6.14 6.14 0 01-8.33-8.73 6.14 6.14 0 0110.16 1.55 6.14 6.14 0 01-.4 5.93l2.41 2.42a1 1 0 01-.01 1.36zM8.4 12.48a4.3 4.3 0 10-.01-8.59 4.3 4.3 0 00.01 8.59z"/></svg>
+      </div>
+      <a href="#" class="cart-icon">
+        <svg width="24" height="24" viewBox="826 826 140 140" fill="currentColor"><path d="M960.758,934.509l2.632,23.541c0.15,1.403-0.25,2.657-1.203,3.761c-0.953,1.053-2.156,1.579-3.61,1.579H833.424c-1.454,0-2.657-0.526-3.61-1.579c-0.952-1.104-1.354-2.357-1.203-3.761l2.632-23.541H960.758z M953.763,871.405l6.468,58.29H831.77l6.468-58.29c0.15-1.203,0.677-2.218,1.58-3.045c0.903-0.827,1.981-1.241,3.234-1.241h19.254v9.627c0,2.658,0.94,4.927,2.82,6.807s4.149,2.82,6.807,2.82c2.658,0,4.926-0.94,6.807-2.82s2.821-4.149,2.821-6.807v-9.627h28.882v9.627c0,2.658,0.939,4.927,2.819,6.807c1.881,1.88,4.149,2.82,6.807,2.82s4.927-0.94,6.808-2.82c1.879-1.88,2.82-4.149,2.82-6.807v-9.627h19.253c1.255,0,2.332,0.414,3.235,1.241C953.086,869.187,953.612,870.202,953.763,871.405z M924.881,857.492v19.254c0,1.304-0.476,2.432-1.429,3.385s-2.08,1.429-3.385,1.429c-1.303,0-2.432-0.477-3.384-1.429c-0.953-0.953-1.43-2.081-1.43-3.385v-19.254c0-5.315-1.881-9.853-5.641-13.613c-3.76-3.761-8.298-5.641-13.613-5.641s-9.853,1.88-13.613,5.641c-3.761,3.76-5.641,8.298-5.641,13.613v19.254c0,1.304-0.476,2.432-1.429,3.385c-0.953,0.953-2.081,1.429-3.385,1.429c-1.303,0-2.432-0.477-3.384-1.429c-0.953-0.953-1.429-2.081-1.429-3.385v-19.254c0-7.973,2.821-14.779,8.461-20.42c5.641-5.641,12.448-8.461,20.42-8.461c7.973,0,14.779,2.82,20.42,8.461C922.062,842.712,924.881,849.519,924.881,857.492z"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <a href="#" class="account-icon">
+        <svg viewBox="0 0 120 120"><path d="M84.6,62c-14.1,12.3-35.1,12.3-49.2,0C16.1,71.4,3.8,91,3.8,112.5c0,2.1,1.7,3.8,3.8,3.8h105c2.1,0,3.8-1.7,3.8-3.8C116.2,91,103.9,71.4,84.6,62z"/><circle cx="60" cy="33.8" r="30"/></svg>
+      </a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
+  <a href="#">SOFA</a>
+  <a href="#">BEDROOM</a>
+  <a href="#">DINING</a>
+  <a href="#">DECOR</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-slides">
+    <div class="hero-slide active"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-subtitle">Welcome to Home &amp; Living Furniture's</p>
+    <h1 class="hero-title">Let's Bring Comfort and Elegance to Your Home</h1>
+    <a href="#featured" class="btn-primary">Shop Now</a>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Products</h2>
+      <a href="#" class="btn-outline">Shop Now</a>
+    </div>
+    <div class="products-grid" id="featuredGrid">
+      <!-- Products injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ON SALE -->
+<section class="section gray-bg">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">On Sale</h2>
+      <a href="#" class="btn-outline">Shop Now</a>
+    </div>
+    <div class="products-grid-4" id="saleGrid"></div>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">New Arrivals</h2>
+      <a href="#" class="btn-outline">Shop Now</a>
+    </div>
+    <div class="products-grid-4" id="arrivalsGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT / OUR STORY -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div>
+        <p class="about-label">Our Story</p>
+        <h2 class="about-title">The Heart of Cozy Living</h2>
+        <p class="about-text">At <strong>Home &amp; Living Furniture's</strong>, we believe that a home is more than just a place—it's a feeling. It's where laughter is shared, memories are made, and comfort is found. Our journey began with a simple mission: to help people create warm, inviting spaces that truly feel like home.</p>
+        <p class="about-text"><h3>How It All Started</h3> What started as a passion for well-crafted furniture turned into a vision to bring <strong>affordable luxury</strong> to homes everywhere. Frustrated by the lack of stylish yet budget-friendly furniture, we set out to design and curate a collection that balances <strong>quality, beauty, and comfort</strong>—all at prices that make sense.</p>
+        <p class="about-text"><h3>Our Promise to You</h3> Every piece in our collection is thoughtfully selected to offer <strong>timeless style, lasting durability, and ultimate coziness</strong>. We partner with skilled artisans and trusted manufacturers to ensure that every item meets our high standards.</p>
+        <a href="#" class="btn-primary" style="margin-top:24px">Read More</a>
+      </div>
+      <div class="video-wrap">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" alt="Furniture collection" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <div class="divider"></div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="quote-icon">&#8220;</div>
+        <p class="testimonial-text">Ngijabule kakhulu ngesofa engiyithengile kwa Home &amp; Living Furnitures. Ikhwalithi iphezulu, intengo ifanele, futhi ukulethwa bekushesha kakhulu! Ngiyabonga ngesisebenzi esihle.</p>
+        <div class="testimonial-author">Sibongile M</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">&#8220;</div>
+        <p class="testimonial-text">Thank you so much, Home &amp; Living Furnitures. The shopping experience was easy, the prices were great, and I received my furniture without any hassle. Excellent service!</p>
+        <div class="testimonial-author">Alicia</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-icon">&#8220;</div>
+        <p class="testimonial-text">Die meubels is pragtig en van hoë gehalte! Ek was verbaas oor hoe bekostigbaar dit is. Die aflewering was vinnig en die span was baie behulpsaam. Sal beslis weer hier koop!</p>
+        <div class="testimonial-author">Johan V</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h3>Bringing Comfort Home</h3>
+  <p>We're more than just a furniture store—we're a brand built on the idea that <strong>home should be your favorite place</strong>. From our family to yours, we invite you to explore our collection and create a space that reflects who you are.</p>
+  <p style="color:rgba(255,255,255,0.85);font-weight:600;margin-bottom:28px;">Welcome to Home &amp; Living Furniture's—where comfort meets style, and home feels just right.</p>
+  <a href="#featured" class="btn-primary">Purchase Our Best Furniture's</a>
+</section>
+
+<!-- TRUST ICONS -->
+<section class="trust-section">
+  <div class="container">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 448 512"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"/></svg>
+        </div>
+        <div>
+          <p class="trust-title">Secure Payment</p>
+          <p class="trust-desc">Shop with confidence! We offer safe and encrypted payment options for a worry-free checkout.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 512 512"><path d="M509.5 184.6L458.9 32.8C452.4 13.2 434.1 0 413.4 0H272v192h238.7c-.4-2.5-.4-5-1.2-7.4zM240 0H98.6c-20.7 0-39 13.2-45.5 32.8L2.5 184.6c-.8 2.4-.8 4.9-1.2 7.4H240V0zM0 224v240c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V224H0z"/></svg>
+        </div>
+        <div>
+          <p class="trust-title">Delivered With Care</p>
+          <p class="trust-desc">Your furniture is handled with the utmost care to ensure it arrives safely and in perfect condition.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 576 512"><path d="M275.3 250.5c7 7.4 18.4 7.4 25.5 0l108.9-114.2c31.6-33.2 29.8-88.2-5.6-118.8-30.8-26.7-76.7-21.9-104.9 7.7L288 36.9l-11.1-11.6C248.7-4.4 202.8-9.2 172 17.5c-35.3 30.6-37.2 85.6-5.6 118.8l108.9 114.2zm290 77.6c-11.8-10.7-30.2-10-42.6 0L430.3 402c-11.3 9.1-25.4 14-40 14H272c-8.8 0-16-7.2-16-16s7.2-16 16-16h78.3c15.9 0 30.7-10.9 33.3-26.6 3.3-20-12.1-37.4-31.6-37.4H192c-27 0-53.1 9.3-74.1 26.3L71.4 384H16c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h356.8c14.5 0 28.6-4.9 40-14L564 377c15.2-12.1 16.4-35.3 1.3-48.9z"/></svg>
+        </div>
+        <div>
+          <p class="trust-title">Excellent Service</p>
+          <p class="trust-desc">From browsing to delivery, our friendly team is here to provide a seamless and satisfying shopping experience.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">HOME &amp; LIVING FURNITURES</p>
+        <p class="footer-desc">Crafted for comfort, designed for style. Discover quality furniture that makes every space feel like home.</p>
+        <a href="mailto:orders@homeandlivingfurnitures.com" class="footer-email">
+          <svg viewBox="0 0 512 512"><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/></svg>
+          orders@homeandlivingfurnitures.com
+        </a>
+        <div style="margin-top:24px;">
+          <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px;">Subscribe to our newsletter</p>
+          <form class="newsletter-form" onsubmit="return false;">
+            <input type="email" placeholder="Your email address...">
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div>
+        <p class="footer-heading">Customer Care</p>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Shipping Policies</a></li>
+          <li><a href="#">Returns &amp; Refunds Policy</a></li>
+          <li><a href="#">Quality &amp; Warranty</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Frequently Asked Questions</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-heading">Our Socials</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/profile.php?id=61586012254518" target="_blank" class="social-link">
+            <svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/homeandlivingfurnitures/" target="_blank" class="social-link">
+            <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+          </a>
+        </div>
+        <p class="footer-desc">Shop With Us at Ease — Easy and Safe Delivery</p>
+      </div>
+    </div>
+    <div class="footer-bottom">©2025. Home &amp; Living. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/27835829819" target="_blank" class="whatsapp-btn">
+  <span class="whatsapp-icon-wrap">
+    <svg viewBox="0 0 1219.547 1225.016">
+      <path style="fill:#E0E0E0" d="M1041.858 178.02C927.206 63.289 774.753.07 612.325 0 277.617 0 5.232 272.298 5.098 606.991c-.039 106.986 27.915 211.42 81.048 303.476L0 1225.016l321.898-84.406c88.689 48.368 188.547 73.855 290.166 73.896h.258c334.654 0 607.08-272.346 607.222-607.023.056-162.208-63.052-314.724-177.689-429.463z"/>
+      <linearGradient id="wag" gradientUnits="userSpaceOnUse" x1="609.77" y1="1190.114" x2="609.77" y2="21.084"><stop offset="0" stop-color="#20b038"/><stop offset="1" stop-color="#60d66a"/></linearGradient>
+      <path fill="url(#wag)" d="M27.875 1190.114l82.211-300.18c-50.719-87.852-77.391-187.523-77.359-289.602.133-319.398 260.078-579.25 579.469-579.25 155.016.07 300.508 60.398 409.898 169.891 109.414 109.492 169.633 255.031 169.57 409.812-.133 319.406-260.094 579.281-579.445 579.281h-.258c-96.977-.031-192.266-24.375-276.898-70.5l-307.188 80.548z"/>
+      <path fill="#FFF" fill-rule="evenodd" clip-rule="evenodd" d="M462.273 349.294c-11.234-24.977-23.062-25.477-33.75-25.914-8.742-.375-18.75-.352-28.742-.352-10 0-26.25 3.758-39.992 18.766-13.75 15.008-52.5 51.289-52.5 125.078 0 73.797 53.75 145.102 61.242 155.117 7.5 10 103.758 166.266 256.203 226.383 126.695 49.961 152.477 40.023 179.977 37.523s88.734-36.273 101.234-71.297c12.5-35.016 12.5-65.031 8.75-71.305-3.75-6.25-13.75-10-28.75-17.5s-88.734-43.789-102.484-48.789-23.75-7.5-33.75 7.516c-10 15-38.727 48.773-47.477 58.773-8.75 10.023-17.5 11.273-32.5 3.773-15-7.523-63.305-23.344-120.609-74.438-44.586-39.75-74.688-88.844-83.438-103.859-8.75-15-.938-23.125 6.586-30.602 6.734-6.719 15-17.508 22.5-26.266 7.484-8.758 9.984-15.008 14.984-25.008 5-10.016 2.5-18.773-1.25-26.273s-32.898-81.67-46.234-111.326z"/>
+    </svg>
+  </span>
+  WhatsApp us
+</a>
+
+<script>
+// ===== PRODUCTS DATA =====
+const bagIcon = `<svg viewBox="826 826 140 140" fill="currentColor"><path d="M960.758,934.509l2.632,23.541c0.15,1.403-0.25,2.657-1.203,3.761c-0.953,1.053-2.156,1.579-3.61,1.579H833.424c-1.454,0-2.657-0.526-3.61-1.579c-0.952-1.104-1.354-2.357-1.203-3.761l2.632-23.541H960.758z M953.763,871.405l6.468,58.29H831.77l6.468-58.29c0.15-1.203,0.677-2.218,1.58-3.045c0.903-0.827,1.981-1.241,3.234-1.241h19.254v9.627c0,2.658,0.94,4.927,2.82,6.807s4.149,2.82,6.807,2.82c2.658,0,4.926-0.94,6.807-2.82s2.821-4.149,2.821-6.807v-9.627h28.882v9.627c0,2.658,0.939,4.927,2.819,6.807c1.881,1.88,4.149,2.82,6.807,2.82s4.927-0.94,6.808-2.82c1.879-1.88,2.82-4.149,2.82-6.807v-9.627h19.253c1.255,0,2.332,0.414,3.235,1.241C953.086,869.187,953.612,870.202,953.763,871.405z M924.881,857.492v19.254c0,1.304-0.476,2.432-1.429,3.385s-2.08,1.429-3.385,1.429c-1.303,0-2.432-0.477-3.384-1.429c-0.953-0.953-1.43-2.081-1.43-3.385v-19.254c0-5.315-1.881-9.853-5.641-13.613c-3.76-3.761-8.298-5.641-13.613-5.641s-9.853,1.88-13.613,5.641c-3.761,3.76-5.641,8.298-5.641,13.613v19.254c0,1.304-0.476,2.432-1.429,3.385c-0.953,0.953-2.081,1.429-3.385,1.429c-1.303,0-2.432-0.477-3.384-1.429c-0.953-0.953-1.429-2.081-1.429-3.385v-19.254c0-7.973,2.821-14.779,8.461-20.42c5.641-5.641,12.448-8.461,20.42-8.461c7.973,0,14.779,2.82,20.42,8.461C922.062,842.712,924.881,849.519,924.881,857.492z"/></svg>`;
+
+const products = {
+  featured: [
+    { title: "Arden Carbon Gray Fabric Bedframe", cat: "BEDROOM", price: "R3,499 – R5,999", img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80", swatches: ["#d3cfca","#666666"], stars: 0 },
+    { title: "Georges Modular Sofa – 4-Seater Plush Sectional", cat: "4-Seater & Up", price: "R12,999", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80", stars: 5 },
+    { title: "Hannah 1.2M Round Marble Dining Table", cat: "DINING", price: "R4,199", img: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80", swatches: ["#563e30","#e0b17f"], stars: 0 },
+    { title: "Lucenzo Modern Leather Dining Table Set", cat: "DINING", price: "R9,999", img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=600&q=80", swatches: ["#c9a227","#c0c0c0"], stars: 0 },
+    { title: "Moderno L-Shape 3-Seater Electric Recliner Sofa", cat: "4-Seater & Up", price: '<del>R14,999</del> <ins>R10,499</ins>', img: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80", swatches: ["#6e6e6e","#a59a86","#666764"], sale: true, stars: 4.9 },
+    { title: "Orae Cirrus 1.74M Upholstered Sherpa Bench – Ivory", cat: "2-Seater", price: '<del>R7,499</del> <ins>R5,599</ins>', img: "https://images.unsplash.com/photo-1567016432779-094069958ea5?w=600&q=80", sale: true, stars: 5 },
+    { title: "Ronny Arm Dining Chair – Walnut", cat: "DINING", price: '<del>R1,999</del> <ins>R1,349</ins>', img: "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=600&q=80", swatches: ["#d3c5b7","#3c3c3c","#707966","#dfc270"], sale: true, stars: 4.8 },
+    { title: "Shayne Velvet Linen Swivel Chair – Cream", cat: "DINING", price: "R1,199", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80", stars: 5 },
+    { title: "Valente Recliner Corner Sofa", cat: "4-Seater & Up", price: "R14,999", img: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=600&q=80", swatches: ["#efe8de","#959595"], stars: 5 },
+  ],
+  sale: [
+    { title: "Montero Velvet L-Shape Sofa", cat: "L-Shape", price: '<del>R8,499</del> <ins>R6,499</ins>', img: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=600&q=80", swatches: ["#0d2439","#000000","#d6a841","#5e071d"], sale: true, stars: 5 },
+    { title: "Tatum Walnut Veneer Accent Chair with PVC Upholstery", cat: "1-Seater", price: '<del>R4,999</del> <ins>R3,999</ins>', img: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80", swatches: ["#000000","#5f4a44","#ffffff"], sale: true, stars: 5 },
+    { title: "Ronny 4-Seater Dining Set – Natural (1 Table + 4 Chairs)", cat: "DINING", price: '<del>R11,999</del> <ins>R10,499</ins>', img: "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?w=600&q=80", sale: true, stars: 5 },
+    { title: "Edra Modular Sofa", cat: "4-Seater & Up", price: '<del>R29,999</del> <ins>R19,999</ins>', img: "https://images.unsplash.com/photo-1512212621149-107ffe572d2f?w=600&q=80", swatches: ["#bcbcb2","#848484","#dd3333","#215c86"], sale: true, stars: 5 },
+  ],
+  arrivals: [
+    { title: "Edra Modular Sofa", cat: "4-Seater & Up", price: '<del>R29,999</del> <ins>R19,999</ins>', img: "https://images.unsplash.com/photo-1512212621149-107ffe572d2f?w=600&q=80", swatches: ["#bcbcb2","#848484"], sale: true, stars: 5 },
+    { title: "Auralie Textured Lounge Sofa", cat: "3-Seater", price: '<del>R20,999</del> <ins>R14,999</ins>', img: "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&q=80", swatches: ["#a29b92","#788084","#bf9d90"], sale: true },
+    { title: "Amara 5-Piece Compact Rattan Dining Set", cat: "Outdoor/Patio", price: "R5,999", img: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=600&q=80", swatches: ["#c6c0b2","#3b383b"], stars: 5 },
+    { title: "Basir 4-Seater Dining Set with Ormond Chairs", cat: "DINING", price: "R10,699 – R11,499", img: "https://images.unsplash.com/photo-1550254478-ead40cc54513?w=600&q=80" },
+  ]
+};
+
+function renderProduct(p) {
+  const stars = p.stars ? '★'.repeat(Math.round(p.stars)) + '☆'.repeat(5 - Math.round(p.stars)) : '';
+  const swatchHtml = p.swatches ? `<div class="swatches">${p.swatches.map(c=>`<div class="swatch" style="background:${c}" title="${c}"></div>`).join('')}</div>` : '';
+  return `
+    <div class="product-card">
+      <div class="product-thumb">
+        <a href="#"><img src="${p.img}" alt="${p.title}" loading="lazy"></a>
+        ${p.sale ? '<span class="sale-badge">Sale!</span>' : ''}
+        <button class="add-btn" title="Add to cart">${bagIcon}</button>
+      </div>
+      <div class="product-info">
+        ${stars ? `<div class="product-stars">${stars}</div>` : ''}
+        <p class="product-title"><a href="#">${p.title}</a></p>
+        <p class="product-cat">${p.cat}</p>
+        <p class="product-price">${p.price}</p>
+        ${swatchHtml}
+      </div>
+    </div>`;
+}
+
+document.getElementById('featuredGrid').innerHTML = products.featured.map(renderProduct).join('');
+document.getElementById('saleGrid').innerHTML = products.sale.map(renderProduct).join('');
+document.getElementById('arrivalsGrid').innerHTML = products.arrivals.map(renderProduct).join('');
+
+// ===== HERO SLIDESHOW =====
+let slideIdx = 0;
+const slides = document.querySelectorAll('.hero-slide');
+function nextSlide() {
+  slides[slideIdx].classList.remove('active');
+  slideIdx = (slideIdx + 1) % slides.length;
+  slides[slideIdx].classList.add('active');
+}
+setInterval(nextSlide, 5000);
+
+// ===== STICKY HEADER =====
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ===== MOBILE MENU =====
+document.getElementById('mobileToggle').addEventListener('click', () => {
+  document.getElementById('mobileNav').classList.add('open');
+});
+document.getElementById('mobileNavClose').addEventListener('click', () => {
+  document.getElementById('mobileNav').classList.remove('open');
+});
+
+// ===== CART COUNT =====
+document.querySelectorAll('.add-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const countEl = document.querySelector('.cart-count');
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+    btn.style.background = '#005EE9';
+    setTimeout(() => btn.style.background = '', 600);
+  });
+});
+</script>
+</body>
+</html>
